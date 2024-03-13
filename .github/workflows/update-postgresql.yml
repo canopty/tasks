@@ -16,23 +16,25 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get install -y postgresql-client
-        
-    - name: Find modified JSON files
-      id: find_files
-      run: |
-        git diff --name-status HEAD^..HEAD | awk '$1 != "D" && $2 ~ /^tasks\// && $2 ~ /\.json$/ {print $2}' | sed 's/tasks\///' > changed_files.txt
-        echo "{files}={$(cat changed_files.txt)}" >> "$GITHUB_OUTPUT"
-        
+    
+    - name: Get all changed markdown files
+      id: changed-files
+      uses: tj-actions/changed-files@v42
+      with:
+        files: |
+          **.json
+          
     - name: Update PostgreSQL database
-      if: steps.find_files.outputs.files != ''
+      if: steps.changed-files.outputs.any_changed == 'true'
       env:
         POSTGRESQL_HOST: ${{ secrets.POSTGRESQL_HOST }}
         POSTGRESQL_PORT: ${{ secrets.POSTGRESQL_PORT }}
         POSTGRESQL_DB: ${{ secrets.POSTGRESQL_DB }}
         POSTGRESQL_USER: ${{ secrets.POSTGRESQL_USER }}
         POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
+        ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
       run: |
-        for file in $(cat changed_files.txt); do
+        for file in ${ALL_CHANGED_FILES}; do
           task_id=$(basename "$file" .json)
           if [ -f "tasks/$file" ]; then
             psql -h $POSTGRESQL_HOST -p $POSTGRESQL_PORT -d $POSTGRESQL_DB -U $POSTGRESQL_USER -c "DELETE FROM tasks WHERE task_id = '$task_id';"
