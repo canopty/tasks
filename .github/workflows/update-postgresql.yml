@@ -23,18 +23,19 @@ jobs:
       id: changed-files
       uses: tj-actions/changed-files@v42
       with:
+        output_renamed_files_as_deleted_and_added: true
         files: |
           **.json
           
     - name: Update PostgreSQL database
-      if: steps.changed-files.outputs.any_changed == 'true'
+      if: steps.changed-files.outputs.any_modified == 'true'
       env:
         POSTGRESQL_HOST: ${{ secrets.POSTGRESQL_HOST }}
         POSTGRESQL_PORT: ${{ secrets.POSTGRESQL_PORT }}
         POSTGRESQL_DB: ${{ secrets.POSTGRESQL_DB }}
         POSTGRESQL_USER: ${{ secrets.POSTGRESQL_USER }}
         POSTGRESQL_PASSWORD: ${{ secrets.POSTGRESQL_PASSWORD }}
-        ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_modified_files }}
       run: |
         export PGPASSWORD=$POSTGRESQL_PASSWORD
         for file in ${ALL_CHANGED_FILES}; do
