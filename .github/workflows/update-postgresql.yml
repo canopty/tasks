@@ -21,7 +21,7 @@ jobs:
       id: find_files
       run: |
         git diff --name-status HEAD^..HEAD | awk '$1 != "D" && $2 ~ /^tasks\// && $2 ~ /\.json$/ {print $2}' | sed 's/tasks\///' > changed_files.txt
-        echo "::set-output name=files::$(cat changed_files.txt)"
+        echo "{files}={$(cat changed_files.txt)}" >> "$GITHUB_OUTPUT"
         
     - name: Update PostgreSQL database
       if: steps.find_files.outputs.files != ''
