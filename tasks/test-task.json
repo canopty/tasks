@@ -1,0 +1,40 @@
+{
+    "task_name": "Test task",
+    "input_vars": [
+        [
+            "input1",
+            "input1 description"
+        ],
+        [
+            "input2",
+            "input2 description"
+        ]
+    ],
+    "output_vars": [
+        [
+            "output1",
+            "output1 description"
+        ],
+        [
+            "output2",
+            "output2 description"
+        ]
+    ],
+    "description": "Test description",
+    "objective": "Test objective",
+    "constraints": [
+        [
+            "constraint1",
+            "constraint1 description"
+        ],
+        [
+            "constraint2",
+            "constraint2 description"
+        ]
+    ],
+    "motivation": "Test motivation",
+    "categories": [
+        "category1",
+        "category2"
+    ]
+}
