@@ -38,6 +38,7 @@ jobs:
       run: |
         export PGPASSWORD=$POSTGRESQL_PASSWORD
         for file in ${ALL_CHANGED_FILES}; do
+          echo "file $file"
           task_id=$(basename "$file" .json)
           if [ -f "tasks/$file" ]; then
             echo "updating file $file"
