@@ -20,7 +20,7 @@ jobs:
     - name: Find modified JSON files
       id: find_files
       run: |
-        git diff --name-status HEAD^..HEAD | awk '$1 != "D" && $2 ~ /\.json$/ {print $2}' > changed_files.txt
+        git diff --name-status HEAD^..HEAD | awk '$1 != "D" && $2 ~ /^tasks\// && $2 ~ /\.json$/ {print $2}' | sed 's/tasks\///' > changed_files.txt
         echo "::set-output name=files::$(cat changed_files.txt)"
         
     - name: Update PostgreSQL database
@@ -34,9 +34,9 @@ jobs:
       run: |
         for file in $(cat changed_files.txt); do
           task_id=$(basename "$file" .json)
-          if [ -f "$file" ]; then
+          if [ -f "tasks/$file" ]; then
             psql -h $POSTGRESQL_HOST -p $POSTGRESQL_PORT -d $POSTGRESQL_DB -U $POSTGRESQL_USER -c "DELETE FROM tasks WHERE task_id = '$task_id';"
-            psql -h $POSTGRESQL_HOST -p $POSTGRESQL_PORT -d $POSTGRESQL_DB -U $POSTGRESQL_USER -c "INSERT INTO tasks (task_id, task_data) VALUES ('$task_id', '$(cat $file)'::jsonb);"
+            psql -h $POSTGRESQL_HOST -p $POSTGRESQL_PORT -d $POSTGRESQL_DB -U $POSTGRESQL_USER -c "INSERT INTO tasks (task_id, task_data) VALUES ('$task_id', '$(cat tasks/$file)'::jsonb);"
           else
             psql -h $POSTGRESQL_HOST -p $POSTGRESQL_PORT -d $POSTGRESQL_DB -U $POSTGRESQL_USER -c "DELETE FROM tasks WHERE task_id = '$task_id';"
           fi
