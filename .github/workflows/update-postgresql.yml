@@ -19,7 +19,7 @@ jobs:
       run: |
         sudo apt-get install -y postgresql-client
     
-    - name: Get all changed markdown files
+    - name: Get all changed JSON files
       id: changed-files
       uses: tj-actions/changed-files@v42
       with:
