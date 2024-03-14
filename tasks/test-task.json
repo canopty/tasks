@@ -33,6 +33,10 @@
         ]
     ],
     "motivation": "Test motivation",
+    "input_format": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"input1\": {\n            \"type\": \"string\"\n        },\n        \"input2\": {\n            \"type\": \"number\"\n        }\n    },\n    \"required\": [\"input1\", \"input2\"],\n    \"additionalProperties\": false\n}",
+    "output_format": "{\n    \"type\": \"object\",\n    \"properties\": {\n        \"output1\": {\n            \"type\": \"string\"\n        },\n        \"output2\": {\n            \"type\": \"number\"\n        }\n    },\n    \"required\": [\"output1\", \"output2\"],\n    \"additionalProperties\": false\n}",
+    "input_example": "{\n    \"input1\": \"example\",\n    \"input2\": 42\n}",
+    "output_example": "{\n    \"output1\": \"example\",\n    \"output2\": 42\n}",
     "categories": [
         "category1",
         "category2"
